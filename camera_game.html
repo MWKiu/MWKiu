@@ -320,12 +320,12 @@
             <div class="energy-bar-bg"><div class="energy-fill" id="energyFill" style="width: 80%"></div></div>
         </div>
 
-        <div class="location-header" id="locationHeader" style="display: none;">
+        <div class="location-header" id="locationHeader">
             <div class="location-name">📚 LIBRARY AREA</div>
             <div class="level-badge" id="levelInfo">LEVEL 1/3 | TIME: 5:00</div>
         </div>
 
-        <div class="area-card" id="challengeArea" style="display: none;">
+        <div class="area-card" id="challengeArea">
             <div class="section-title">🎯 TARGET PHOTO</div>
             <div class="image-container" id="targetContainer">
                 <img id="targetImg" src="" alt="TARGET" style="width:100%; height:100%; object-fit:cover; display:none;">
@@ -339,7 +339,7 @@
             <div id="similarityText" style="text-align:center; margin-top:5px; color:#66ccff">0%</div>
         </div>
 
-        <div class="area-card" id="cameraArea" style="display: none;">
+        <div class="area-card" id="cameraArea">
             <div class="section-title">📷 YOUR CAMERA</div>
             <div class="image-container">
                 <video id="video" autoplay playsinline></video>
@@ -355,14 +355,6 @@
 
         <div class="bottom-buttons">
             <button class="btn" id="nextLevelBtn" onclick="nextLevel()" style="display:none">⏭ NEXT LEVEL</button>
-        </div>
-        
-        <div class="area-card" id="libraryIntroCard">
-            <div class="section-title">📍 LIBRARY AREA</div>
-            <div class="image-container">
-                <img id="libraryImage" src="https://i.postimg.cc/H8HMRXSg/IMG-9840.jpg" alt="LIBRARY">
-            </div>
-            <button class="btn" id="startMatchingBtn" onclick="startMatching()">▶ START MATCHING</button>
         </div>
     </div>
 
@@ -423,39 +415,49 @@
         const levelInfo = document.getElementById('levelInfo');
         const energyFill = document.getElementById('energyFill');
         const energyPercent = document.getElementById('energyPercent');
-        const libraryIntroCard = document.getElementById('libraryIntroCard');
-        const locationHeader = document.getElementById('locationHeader');
-        const challengeArea = document.getElementById('challengeArea');
-        const cameraArea = document.getElementById('cameraArea');
+        
+        // ========== 自動啟動 ==========
+        window.addEventListener('load', () => {
+            startMatching();
+        });
         
         async function startMatching() {
-            libraryIntroCard.style.display = 'none';
-            locationHeader.style.display = 'block';
-            challengeArea.style.display = 'block';
-            cameraArea.style.display = 'block';
-            
             await initCamera();
             startLevel();
         }
         
         async function initCamera() {
             try {
+                showToast("REQUESTING CAMERA ACCESS...");
+                
                 const constraints = { video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'environment' } };
                 gameState.camera = await navigator.mediaDevices.getUserMedia(constraints);
                 video.srcObject = gameState.camera;
+                
                 await new Promise(resolve => { video.onloadedmetadata = () => { video.play(); resolve(); }; });
                 video.classList.add('visible');
-                document.getElementById('cameraPlaceholder').style.display = 'none';
+                
+                const cameraPlaceholder = document.getElementById('cameraPlaceholder');
+                if (cameraPlaceholder) cameraPlaceholder.style.display = 'none';
+                
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
                 gameState.cameraActive = true;
-                document.getElementById('cameraStatus').textContent = 'ONLINE';
-                document.getElementById('cameraStatus').style.color = '#00ccff';
-                takePhotoBtn.disabled = false;
+                
+                const cameraStatus = document.getElementById('cameraStatus');
+                if (cameraStatus) {
+                    cameraStatus.textContent = 'ONLINE';
+                    cameraStatus.style.color = '#00ccff';
+                }
+                
+                if (takePhotoBtn) takePhotoBtn.disabled = false;
+                
                 showToast("✅ CAMERA READY");
             } catch (error) {
+                console.error("Camera error:", error);
                 showToast("❌ CAMERA ACCESS DENIED", "error");
-                document.getElementById('cameraStatus').textContent = 'OFFLINE';
+                const cameraStatus = document.getElementById('cameraStatus');
+                if (cameraStatus) cameraStatus.textContent = 'OFFLINE';
             }
         }
         
