@@ -138,6 +138,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
         }
         
         #video {
@@ -263,6 +264,28 @@
             margin-top: 8px;
             font-family: monospace;
         }
+        
+        .target-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            color: #a7a7a7;
+            background: #f0f0e3;
+        }
+        
+        .target-placeholder.hidden {
+            display: none;
+        }
+        
+        #targetImg {
+            display: none;
+        }
+        
+        #targetImg.visible {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -289,8 +312,8 @@
         <div class="pixel-panel">
             <div class="section-title">TARGET IMAGE</div>
             <div class="image-container" id="targetContainer">
-                <img id="targetImg" src="" alt="TARGET" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <div id="targetPlaceholder" style="display: flex; align-items: center; justify-content: center; width:100%; height:100%; color: #a7a7a7;">📖 LOADING...</div>
+                <img id="targetImg" src="" alt="TARGET">
+                <div id="targetPlaceholder" class="target-placeholder">📖 LOADING TARGET...</div>
             </div>
         </div>
 
@@ -324,13 +347,11 @@
     <div id="toast" class="toast"></div>
 
     <script>
-        // 使用可靠的圖片備援
-        const FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2387a7b7'/%3E%3Ctext x='50' y='55' text-anchor='middle' fill='white' font-size='14'%3EBOOK%3C/text%3E%3C/svg%3E";
-        
-        const LEVEL_IMAGES = [
-            "https://picsum.photos/id/20/400/300",
-            "https://picsum.photos/id/24/400/300", 
-            "https://picsum.photos/id/42/400/300"
+        // 使用可靠的內建圖片備援 (Base64 書本圖案)
+        const TARGET_IMAGES = [
+            "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%2387a7b7'/%3E%3Crect x='50' y='80' width='300' height='180' fill='%23fdfcf3'/%3E%3Ctext x='200' y='140' text-anchor='middle' fill='%23444444' font-size='28' font-family='monospace'%3E📖 ANCIENT%3C/text%3E%3Ctext x='200' y='180' text-anchor='middle' fill='%23444444' font-size='28' font-family='monospace'%3ETOME%3C/text%3E%3Ctext x='200' y='230' text-anchor='middle' fill='%2387a7b7' font-size='20'%3ELEVEL 1%3C/text%3E%3C/svg%3E",
+            "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%2397b7c7'/%3E%3Crect x='60' y='60' width='280' height='200' fill='%23fdfcf3'/%3E%3Ctext x='200' y='120' text-anchor='middle' fill='%23444444' font-size='26' font-family='monospace'%3E🔮 CRYSTAL%3C/text%3E%3Ctext x='200' y='160' text-anchor='middle' fill='%23444444' font-size='26' font-family='monospace'%3EORACLE%3C/text%3E%3Ctext x='200' y='220' text-anchor='middle' fill='%2397b7c7' font-size='20'%3ELEVEL 2%3C/text%3E%3C/svg%3E",
+            "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23a7c7d7'/%3E%3Crect x='40' y='70' width='320' height='180' fill='%23fdfcf3'/%3E%3Ctext x='200' y='130' text-anchor='middle' fill='%23444444' font-size='26' font-family='monospace'%3E⭐ SACRED%3C/text%3E%3Ctext x='200' y='170' text-anchor='middle' fill='%23444444' font-size='26' font-family='monospace'%3ELANTERN%3C/text%3E%3Ctext x='200' y='225' text-anchor='middle' fill='%23a7c7d7' font-size='20'%3ELEVEL 3%3C/text%3E%3C/svg%3E"
         ];
         
         const LEVEL_TIMES = [300, 240, 180];
@@ -366,12 +387,25 @@
 
         window.addEventListener('load', () => {
             showToast("PRESS ALLOW FOR CAMERA");
-            startMatching();
+            initCamera();
         });
         
-        async function startMatching() {
-            await initCamera();
-            // 相機初始化後再開始關卡
+        function loadTargetImage(level) {
+            const idx = level - 1;
+            const targetUrl = TARGET_IMAGES[idx];
+            
+            targetImg.src = targetUrl;
+            targetImg.onload = () => {
+                targetImg.classList.add('visible');
+                targetPlaceholder.classList.add('hidden');
+                console.log("Target image loaded successfully for level", level);
+            };
+            targetImg.onerror = (e) => {
+                console.error("Image load error, using fallback");
+                targetImg.src = TARGET_IMAGES[0];
+                targetImg.classList.add('visible');
+                targetPlaceholder.classList.add('hidden');
+            };
         }
         
         async function initCamera() {
@@ -394,7 +428,6 @@
                     };
                 });
                 
-                // 設定 canvas 尺寸
                 setTimeout(() => {
                     canvas.width = video.videoWidth || 640;
                     canvas.height = video.videoHeight || 480;
@@ -408,7 +441,6 @@
                 cameraStatus.style.color = "#87a7b7";
                 showToast("✅ CAMERA READY! TAKE A PHOTO");
                 
-                // 相機就緒後開始遊戲
                 startLevel();
                 
             } catch (error) {
@@ -418,27 +450,16 @@
                 cameraPlaceholder.innerHTML = "<span>📷</span><span>NO CAMERA ACCESS</span><span style='font-size:12px;'>DEMO MODE ACTIVE</span>";
                 showToast("⚠️ CAMERA DENIED - USING DEMO MODE");
                 gameState.cameraActive = false;
-                takePhotoBtn.disabled = false; // Demo mode still works
+                takePhotoBtn.disabled = false;
                 startLevel();
             }
         }
         
         function startLevel() {
-            const idx = gameState.currentLevel - 1;
-            const timeLimit = LEVEL_TIMES[idx];
-            const targetUrl = LEVEL_IMAGES[idx];
+            const timeLimit = LEVEL_TIMES[gameState.currentLevel - 1];
             
-            targetImg.src = targetUrl;
-            targetImg.onload = () => {
-                targetImg.style.display = 'block';
-                targetPlaceholder.style.display = 'none';
-            };
-            targetImg.onerror = () => {
-                targetImg.src = FALLBACK_IMAGE;
-                targetImg.style.display = 'block';
-                targetPlaceholder.style.display = 'none';
-                showToast("⚠️ Using fallback target image");
-            };
+            // 載入目標圖片
+            loadTargetImage(gameState.currentLevel);
             
             levelInfo.textContent = `LEVEL ${gameState.currentLevel}/3 | TIME ${Math.floor(timeLimit/60)}:${(timeLimit%60).toString().padStart(2,'0')}`;
             
@@ -448,7 +469,7 @@
             similarityMeter.style.display = 'none';
             submitBtn.disabled = true;
             nextLevelBtn.style.display = 'none';
-            takePhotoBtn.disabled = !gameState.cameraActive;
+            takePhotoBtn.disabled = !gameState.cameraActive && gameState.cameraActive !== undefined ? false : !gameState.cameraActive;
             takePhotoBtn.textContent = "📸 TAKE PHOTO";
             
             startTimer(timeLimit);
@@ -500,7 +521,6 @@
             }
             
             if (!gameState.cameraActive) {
-                // Demo mode
                 const demoSim = Math.floor(60 + Math.random() * 35);
                 gameState.currentSimilarity = demoSim;
                 displaySimilarity(demoSim);
@@ -510,7 +530,6 @@
                 return;
             }
             
-            // Real camera mode
             const ctx = canvas.getContext('2d');
             if (canvas.width === 0 || canvas.height === 0) {
                 canvas.width = video.videoWidth || 640;
@@ -518,7 +537,6 @@
             }
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
             
-            // 模擬相似度計算 (實際 AR 匹配模擬)
             const similarity = Math.floor(55 + Math.random() * 40);
             gameState.currentSimilarity = similarity;
             displaySimilarity(similarity);
@@ -557,7 +575,6 @@
             
             if (gameState.timerInterval) clearInterval(gameState.timerInterval);
             
-            // 計算能量消耗 (匹配度越高消耗越少)
             const reduction = Math.max(5, Math.min(25, Math.floor((100 - gameState.currentSimilarity) / 4)));
             gameState.energy = Math.max(0, gameState.energy - reduction);
             energyFill.style.width = gameState.energy + '%';
@@ -579,7 +596,6 @@
         }
         
         function nextLevel() {
-            // Retry logic for timeout
             if (gameState.timer <= 0 && !gameState.isSubmitted) {
                 gameState.currentLevel = gameState.currentLevel;
                 startLevel();
@@ -602,7 +618,6 @@
                     }
                 }, 500);
             } else if (!gameState.isSubmitted && gameState.timer > 0) {
-                // Manual retry
                 startLevel();
             } else {
                 startLevel();
