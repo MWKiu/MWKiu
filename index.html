@@ -8,6 +8,7 @@
     <style>
         :root {
             --pixel-border: #2c5a6e;
+            --pixel-bg: #a3c9db;
             --pixel-accent: #7bb3c9;
             --pixel-text: #1e4a62;
             --pixel-dark: #1f5068;
@@ -33,13 +34,15 @@
             touch-action: manipulation;
         }
 
-        /* 柔和藍色像素背景 */
+        /* 柔和藍色像素背景 - 不再依賴外部圖片 */
         .background {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: url('background.png') no-repeat center center;
-            background-size: cover;
-            z-index: -1;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #b8d8ec 0%, #8bbcd6 100%);
+            z-index: -2;
         }
         
         /* 像素雲朵／淡色點陣效果 */
@@ -288,26 +291,17 @@
 
     <script>
         // ----- FULL ENGLISH DIALOGUE -----
-        // Main character: Bookworm | Study Lion
-        // Story sequence:
-        // 1. Study Lion: Roarrrrrr!!!!
-        // 2. Study Lion: (Looks like in pain)
-        // 3. Bookworm: Hi…hi? How can I help you? Are you struggling with negative energy monster?
-        // 4. Study Lion: Roar… I must study, but the negative energy is too loud. There’s something that is affecting me to study.
-        // 5. Bookworm: No worries! I should clear the abnormal stuffs and find a quiet corner for you.
-        
         const story = [
-            { name: "溫獅(Study Lion)", text: "Roarrrrrr!!!!", active: "study-lion" },
-            { name: "溫獅(Study Lion)", text: "(Looks like in pain)", active: "study-lion" },
-            { name: "書蟲(Bookworm)", text: "Hi…hi? How can I help you? Are you struggling with negative energy monster?", active: "bookworm" },
-            { name: "溫獅(Study Lion)", text: "Roar… I must study, but the negative energy is too loud. There’s something that is affecting me to study.", active: "study-lion" },
-            { name: "書蟲(Bookworm)", text: "No worries! I should clear the abnormal stuffs and find a quiet corner for you.", active: "bookworm" }
+            { name: "Study Lion", text: "Roarrrrrr!!!!", active: "study-lion" },
+            { name: "Study Lion", text: "(Looks like in pain)", active: "study-lion" },
+            { name: "Bookworm", text: "Hi…hi? How can I help you? Are you struggling with negative energy monster?", active: "bookworm" },
+            { name: "Study Lion", text: "Roar… I must study, but the negative energy is too loud. There's something that is affecting me to study.", active: "study-lion" },
+            { name: "Bookworm", text: "No worries! I should clear the abnormal stuffs and find a quiet corner for you.", active: "bookworm" }
         ];
 
         let currentLine = 0;
         let storyFinished = false;
         
-        // DOM elements
         const dialogueBox = document.getElementById('dialogue-box');
         const speakerNameEl = document.getElementById('speaker-name');
         const messageTextEl = document.getElementById('message-text');
@@ -316,14 +310,12 @@
         const summaryScreen = document.getElementById('summary-screen');
         const startBtn = document.getElementById('start-game-btn');
         
-        // Update UI: highlight character & text
         function updateUI() {
             if (currentLine < story.length) {
                 const line = story[currentLine];
                 speakerNameEl.innerText = line.name;
                 messageTextEl.innerText = line.text;
                 
-                // Handle character highlight
                 const isLionActive = (line.active === "study-lion");
                 const isWormActive = (line.active === "bookworm");
                 
@@ -338,49 +330,40 @@
                     bookwormImg.classList.remove('active');
                 }
                 
-                // Small pixel feedback
                 dialogueBox.style.transform = "scale(0.99)";
                 setTimeout(() => { if(dialogueBox) dialogueBox.style.transform = ""; }, 80);
             } else {
-                // End of story, show mission summary
                 storyFinished = true;
                 if (dialogueBox) dialogueBox.style.display = 'none';
                 if (summaryScreen) summaryScreen.style.display = 'flex';
             }
         }
         
-        // Global click handler to advance story (only before summary)
-        function handleScreenClick(event) {
+        function handleScreenClick() {
             if (storyFinished) return;
-            
-            if (!storyFinished && currentLine < story.length) {
+            if (currentLine < story.length) {
                 currentLine++;
                 updateUI();
             }
-            
-            if (!storyFinished && currentLine >= story.length) {
+            if (currentLine >= story.length && !storyFinished) {
                 storyFinished = true;
                 if (dialogueBox) dialogueBox.style.display = 'none';
                 if (summaryScreen) summaryScreen.style.display = 'flex';
             }
         }
         
-        // Body click listener
         document.body.addEventListener('click', function(event) {
-            // If summary screen is visible, prevent advancing story
             if (summaryScreen && summaryScreen.style.display === 'flex') {
-                // Allow button click only; don't interfere with story
                 if (event.target === startBtn || startBtn.contains(event.target)) {
                     return;
                 }
                 return;
             }
             if (!storyFinished) {
-                handleScreenClick(event);
+                handleScreenClick();
             }
         });
         
-        // Start button redirect to game (index.html)
         if (startBtn) {
             startBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
@@ -388,57 +371,23 @@
             });
         }
         
-        // Image error fallbacks with blue-ish tone
-        function handleImageErrors() {
-            if (studyLionImg.complete && studyLionImg.naturalWidth === 0) {
-                studyLionImg.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 250"%3E%3Crect width="200" height="250" fill="%2382aec9"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%23fff" font-size="28" font-family="monospace"%3E🦁%3C/text%3E%3C/svg%3E';
-            }
-            if (bookwormImg.complete && bookwormImg.naturalWidth === 0) {
-                bookwormImg.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 250"%3E%3Crect width="200" height="250" fill="%2396c0d4"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%23fff" font-size="28" font-family="monospace"%3E📖%3C/text%3E%3C/svg%3E';
-            }
-        }
-        
-        // Initialize the story
         function init() {
             currentLine = 0;
             storyFinished = false;
             if (dialogueBox) dialogueBox.style.display = 'block';
             if (summaryScreen) summaryScreen.style.display = 'none';
-            
-            // Set initial active character (Study Lion)
             studyLionImg.classList.add('active');
             bookwormImg.classList.remove('active');
             updateUI();
-            handleImageErrors();
         }
         
-        // Ensure mission brief text is FULLY ENGLISH
-        const missionTextElement = document.getElementById('mission-text-content');
-        if (missionTextElement) {
-            missionTextElement.innerHTML = `Study Lion is disturbed by negative energy!<br>
-                Bookworm must go through the <b>GATE AREA</b><br>
-                and clear all abnormal objects.<br><br>
-                ➤ <b>Find a quiet corner for Study Lion!</b>`;
-        }
+        window.addEventListener('load', init);
         
-        window.addEventListener('load', () => {
-            init();
-            studyLionImg.addEventListener('error', () => {
-                studyLionImg.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 250"%3E%3Crect width="200" height="250" fill="%237fb0cc"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%23fff" font-size="24" font-family="monospace"%3ESTUDY LION%3C/text%3E%3C/svg%3E';
-            });
-            bookwormImg.addEventListener('error', () => {
-                bookwormImg.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 250"%3E%3Crect width="200" height="250" fill="%239ac2d6"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%23fff" font-size="24" font-family="monospace"%3EBOOKWORM%3C/text%3E%3C/svg%3E';
-            });
-        });
-        
-        // Prevent summary screen background clicks from doing anything else
         if (summaryScreen) {
             summaryScreen.addEventListener('click', function(e) {
                 e.stopPropagation();
             });
         }
-        
-        // Touch-friendly for mobile
     </script>
 </body>
 </html>
