@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Match AR! - Bookworm & Study Lion</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pixel-border: #2c5a6e;
+            --pixel-bg: #a3c9db;
+            --pixel-accent: #7bb3c9;
+            --pixel-text: #1e4a62;
+            --pixel-dark: #1f5068;
+            --pixel-soft: #cbe5f0;
+            --pixel-glow: #9bc8df;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--pixel-bg);
+            font-family: 'VT323', monospace;
+            touch-action: manipulation;
+        }
+
+        /* 柔和藍色像素背景 */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #b8d8ec 0%, #8bbcd6 100%);
+            z-index: -2;
+        }
+        
+        /* 像素雲朵／淡色點陣效果 */
+        .background::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(0deg, rgba(80,120,140,0.06) 0px, rgba(80,120,140,0.06) 2px, transparent 2px, transparent 8px),
+                repeating-linear-gradient(90deg, rgba(200,225,240,0.1) 0px, rgba(200,225,240,0.1) 4px, transparent 4px, transparent 12px);
+            pointer-events: none;
+        }
+
+        /* 角色容器 - 不阻擋點擊 */
+        .character-container {
+            position: absolute;
+            bottom: 22vh;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 0 6%;
+            pointer-events: none; 
+            z-index: 5;
+        }
+
+        .character {
+            width: 44vw;
+            max-width: 300px;
+            height: auto;
+            transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+            filter: brightness(0.65) grayscale(0.2) sepia(0.1);
+            transform: scale(0.88);
+            opacity: 0.75;
+            image-rendering: pixelated;
+        }
+
+        /* 活躍角色：明亮，藍色微光效果 */
+        .character.active {
+            filter: brightness(1) grayscale(0) drop-shadow(4px 4px 0px rgba(0,0,0,0.12));
+            transform: scale(1.02);
+            opacity: 1;
+            z-index: 10;
+            animation: pixelPop 0.2s steps(2);
+        }
+
+        @keyframes pixelPop {
+            0% { transform: scale(0.98); }
+            100% { transform: scale(1.02); }
+        }
+
+        /* 像素對話框 - 柔和藍色調 */
+        .pixel-dialogue {
+            position: absolute;
+            bottom: 28px;
+            left: 5%;
+            width: 90%;
+            min-height: 140px;
+            background: #f0f9ff;
+            border: 5px solid var(--pixel-border);
+            box-shadow: 
+                6px 6px 0px 0px rgba(0,0,0,0.1),
+                inset 0 0 0 2px #e2f0f8;
+            padding: 16px 20px;
+            z-index: 20;
+            cursor: pointer;
+            transition: transform 0.05s linear;
+        }
+        
+        .pixel-dialogue:active {
+            transform: scale(0.99);
+        }
+
+        .name-tag {
+            font-size: 26px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #1e3a4d;
+            background: var(--pixel-accent);
+            padding: 4px 16px;
+            border: 2px solid var(--pixel-border);
+            position: absolute;
+            top: -22px;
+            left: 16px;
+            box-shadow: 2px 2px 0 var(--pixel-border);
+            text-transform: uppercase;
+        }
+
+        .message {
+            font-size: 28px;
+            color: var(--pixel-text);
+            line-height: 1.2;
+            margin-top: 12px;
+            word-break: break-word;
+            font-weight: 500;
+        }
+
+        .next-hint {
+            position: absolute;
+            right: 18px;
+            bottom: 12px;
+            font-size: 22px;
+            color: #1f6a8a;
+            background: rgba(123, 179, 201, 0.3);
+            padding: 2px 8px;
+            border-radius: 0;
+            font-family: 'VT323', monospace;
+            animation: bounceX 0.7s steps(2) infinite;
+        }
+
+        @keyframes bounceX {
+            0% { transform: translateX(0); opacity: 0.6; }
+            100% { transform: translateX(6px); opacity: 1; }
+        }
+
+        /* 任務總結畫面 - 柔和藍色風格 */
+        #summary-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(44, 78, 98, 0.92);
+            backdrop-filter: blur(3px);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 200;
+        }
+
+        .mission-box {
+            border: 8px solid var(--pixel-border);
+            background: #eef6fc;
+            padding: 28px 20px;
+            width: 88%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 10px 10px 0 var(--pixel-dark);
+            animation: riseUp 0.3s steps(3);
+        }
+
+        @keyframes riseUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .mission-title {
+            font-size: 44px;
+            color: #c9512c;
+            margin-bottom: 16px;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 0 #f0cf9e;
+        }
+        
+        .mission-text {
+            font-size: 26px;
+            color: #1a4d66;
+            line-height: 1.35;
+            margin-bottom: 28px;
+            font-weight: bold;
+        }
+        
+        .mission-text b {
+            color: #b6472a;
+            background: #ffe3b3;
+            padding: 0 4px;
+        }
+        
+        .btn-start {
+            font-family: 'VT323', monospace;
+            font-size: 38px;
+            background: var(--pixel-accent);
+            color: #1a3b4b;
+            border: 4px solid var(--pixel-border);
+            padding: 12px 40px;
+            cursor: pointer;
+            box-shadow: 6px 6px 0 var(--pixel-border);
+            transition: 0.04s linear;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .btn-start:active {
+            box-shadow: 1px 1px 0 var(--pixel-border);
+            transform: translate(5px, 5px);
+        }
+        
+        /* 像素對話框小裝飾 - 藍色風格 */
+        .pixel-dialogue::before {
+            content: "";
+            position: absolute;
+            bottom: -12px;
+            left: 30px;
+            width: 20px;
+            height: 20px;
+            background: #f0f9ff;
+            border-left: 4px solid var(--pixel-border);
+            border-bottom: 4px solid var(--pixel-border);
+            border-right: 2px solid transparent;
+            border-top: 2px solid transparent;
+        }
+        
+        @media (max-width: 600px) {
+            .message { font-size: 22px; }
+            .name-tag { font-size: 20px; top: -18px; }
+            .character { width: 48vw; }
+            .mission-text { font-size: 20px; }
+            .btn-start { font-size: 32px; padding: 8px 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background"></div>
+
+    <div class="character-container">
+        <!-- Study Lion -->
+        <img id="study-lion" class="character" src="chi-tu.png" alt="Study Lion" onerror="this.src='https://placehold.co/400x500/7ba9c4/1e4a62?text=Study+Lion&font=monospace'">
+        <!-- Bookworm (main character) -->
+        <img id="bookworm" class="character" src="shu-chong.png" alt="Bookworm" onerror="this.src='https://placehold.co/400x500/9ac2d4/1e4a62?text=Bookworm&font=monospace'">
+    </div>
+
+    <div class="pixel-dialogue" id="dialogue-box">
+        <div class="name-tag" id="speaker-name">Study Lion</div>
+        <div class="message" id="message-text">Roarrrrrr!!!!</div>
+        <div class="next-hint">▼ TAP TO NEXT ▼</div>
+    </div>
+
+    <div id="summary-screen">
+        <div class="mission-box">
+            <h1 class="mission-title">✦ MISSION BRIEF ✦</h1>
+            <p class="mission-text" id="mission-text-content">
+                Study Lion is disturbed by negative energy!<br>
+                Bookworm must go through the <b>GATE AREA</b><br>
+                and clear all abnormal objects.<br><br>
+                ➤ <b>Find a quiet corner for Study Lion!</b>
+            </p>
+            <button class="btn-start" id="start-game-btn">START ➔</button>
+        </div>
+    </div>
+
+    <script>
+        // ----- FULL ENGLISH DIALOGUE -----
+        // Main character: Bookworm | Study Lion
+        // Story sequence:
+        // 1. Study Lion: Roarrrrrr!!!!
+        // 2. Study Lion: (Looks like in pain)
+        // 3. Bookworm: Hi…hi? How can I help you? Are you struggling with negative energy monster?
+        // 4. Study Lion: Roar… I must study, but the negative energy is too loud. There’s something that is affecting me to study.
+        // 5. Bookworm: No worries! I should clear the abnormal stuffs and find a quiet corner for you.
+        
+        const story = [
+            { name: "溫獅(Study Lion)", text: "Roarrrrrr!!!!", active: "study-lion" },
+            { name: "溫獅(Study Lion)", text: "(Looks like in pain)", active: "study-lion" },
+            { name: "書蟲(Bookworm)", text: "Hi…hi? How can I help you? Are you struggling with negative energy monster?", active: "bookworm" },
+            { name: "溫獅(Study Lion)", text: "Roar… I must study, but the negative energy is too loud. There’s something that is affecting me to study.", active: "study-lion" },
+            { name: "書蟲(Bookworm)", text: "No worries! I should clear the abnormal stuffs and find a quiet corner for you.", active: "bookworm" }
+        ];
+
+        let currentLine = 0;
+        let storyFinished = false;
+        
+        // DOM elements
+        const dialogueBox = document.getElementById('dialogue-box');
+        const speakerNameEl = document.getElementById('speaker-name');
+        const messageTextEl = document.getElementById('message-text');
+        const studyLionImg = document.getElementById('study-lion');
+        const bookwormImg = document.getElementById('bookworm');
+        const summaryScreen = document.getElementById('summary-screen');
+        const startBtn = document.getElementById('start-game-btn');
+        
+        // Update UI: highlight character & text
+        function updateUI() {
+            if (currentLine < story.length) {
+                const line = story[currentLine];
+                speakerNameEl.innerText = line.name;
+                messageTextEl.innerText = line.text;
+                
+                // Handle character highlight
+                const isLionActive = (line.active === "study-lion");
+                const isWormActive = (line.active === "bookworm");
+                
+                if (isLionActive) {
+                    studyLionImg.classList.add('active');
+                    bookwormImg.classList.remove('active');
+                } else if (isWormActive) {
+                    bookwormImg.classList.add('active');
+                    studyLionImg.classList.remove('active');
+                } else {
+                    studyLionImg.classList.remove('active');
+                    bookwormImg.classList.remove('active');
+                }
+                
+                // Small pixel feedback
+                dialogueBox.style.transform = "scale(0.99)";
+                setTimeout(() => { if(dialogueBox) dialogueBox.style.transform = ""; }, 80);
+            } else {
+                // End of story, show mission summary
+                storyFinished = true;
+                if (dialogueBox) dialogueBox.style.display = 'none';
+                if (summaryScreen) summaryScreen.style.display = 'flex';
+            }
+        }
+        
+        // Global click handler to advance story (only before summary)
+        function handleScreenClick(event) {
+            if (storyFinished) return;
+            
+            if (!storyFinished && currentLine < story.length) {
+                currentLine++;
+                updateUI();
+            }
+            
+            if (!storyFinished && currentLine >= story.length) {
+                storyFinished = true;
+                if (dialogueBox) dialogueBox.style.display = 'none';
+                if (summaryScreen) summaryScreen.style.display = 'flex';
+            }
+        }
+        
+        // Body click listener
+        document.body.addEventListener('click', function(event) {
+            // If summary screen is visible, prevent advancing story
+            if (summaryScreen && summaryScreen.style.display === 'flex') {
+                // Allow button click only; don't interfere with story
+                if (event.target === startBtn || startBtn.contains(event.target)) {
+                    return;
+                }
+                return;
+            }
+            if (!storyFinished) {
+                handleScreenClick(event);
+            }
+        });
+        
+        // Start button redirect to game (index.html)
+        if (startBtn) {
+            startBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                window.location.href = 'index.html';
+            });
+        }
+        
+        // Image error fallbacks with blue-ish tone
+        function handleImageErrors() {
+            if (studyLionImg.complete && studyLionImg.naturalWidth === 0) {
+                studyLionImg.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 250"%3E%3Crect width="200" height="250" fill="%2382aec9"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%23fff" font-size="28" font-family="monospace"%3E🦁%3C/text%3E%3C/svg%3E';
+            }
+            if (bookwormImg.complete && bookwormImg.naturalWidth === 0) {
+                bookwormImg.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 250"%3E%3Crect width="200" height="250" fill="%2396c0d4"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%23fff" font-size="28" font-family="monospace"%3E📖%3C/text%3E%3C/svg%3E';
+            }
+        }
+        
+        // Initialize the story
+        function init() {
+            currentLine = 0;
+            storyFinished = false;
+            if (dialogueBox) dialogueBox.style.display = 'block';
+            if (summaryScreen) summaryScreen.style.display = 'none';
+            
+            // Set initial active character (Study Lion)
+            studyLionImg.classList.add('active');
+            bookwormImg.classList.remove('active');
+            updateUI();
+            handleImageErrors();
+        }
+        
+        // Ensure mission brief text is FULLY ENGLISH
+        const missionTextElement = document.getElementById('mission-text-content');
+        if (missionTextElement) {
+            missionTextElement.innerHTML = `Study Lion is disturbed by negative energy!<br>
+                Bookworm must go through the <b>GATE AREA</b><br>
+                and clear all abnormal objects.<br><br>
+                ➤ <b>Find a quiet corner for Study Lion!</b>`;
+        }
+        
+        window.addEventListener('load', () => {
+            init();
+            studyLionImg.addEventListener('error', () => {
+                studyLionImg.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 250"%3E%3Crect width="200" height="250" fill="%237fb0cc"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%23fff" font-size="24" font-family="monospace"%3ESTUDY LION%3C/text%3E%3C/svg%3E';
+            });
+            bookwormImg.addEventListener('error', () => {
+                bookwormImg.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 250"%3E%3Crect width="200" height="250" fill="%239ac2d6"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%23fff" font-size="24" font-family="monospace"%3EBOOKWORM%3C/text%3E%3C/svg%3E';
+            });
+        });
+        
+        // Prevent summary screen background clicks from doing anything else
+        if (summaryScreen) {
+            summaryScreen.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+        
+        // Touch-friendly for mobile
+    </script>
+</body>
+</html>
