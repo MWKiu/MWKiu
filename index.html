@@ -3,14 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Match AR! - LIBRARY MISSION</title>
+    <title>PIXEL MATCH AR! - LIBRARY MISSION</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        /* 1. Import Pixel Art Font */
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            /* 2. Pixelate rendering globally */
+            image-rendering: pixelated; 
+            image-rendering: crisp-edges;
+            -webkit-tap-highlight-color: transparent;
         }
 
         html, body {
@@ -18,651 +23,394 @@
             height: 100%;
             overflow: hidden;
             position: fixed;
-            font-family: 'Orbitron', sans-serif;
-            background: #000;
-            color: white;
-            -webkit-tap-highlight-color: transparent;
+            font-family: 'VT323', monospace; /* Use Pixel Font */
+            background: #e7e7d7; /* Retro Beige */
+            color: #444444; /* Dark Gray for text */
+            font-size: 20px; /* Base font size for 8-bit feel */
+            letter-spacing: 1px;
         }
 
-        /* 藍色主題背景 */
-        .cyber-bg {
+        /* 3. Pixel Grid Texture Overlay */
+        .pixel-grid {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #0a0a2a 0%, #001133 100%);
-            z-index: -2;
-        }
-
-        /* 藍色能量波動 */
-        .energy-wave {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 50% 50%, rgba(0, 100, 255, 0.15) 0%, transparent 70%);
-            animation: energyPulse 4s ease-in-out infinite;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .scan-line {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(0deg, rgba(0, 100, 255, 0.1) 0px, rgba(0, 100, 255, 0.1) 2px, transparent 2px, transparent 4px);
-            pointer-events: none;
+            background-image: linear-gradient(0deg, transparent 24%, rgba(0, 0, 0, 0.05) 25%, rgba(0, 0, 0, 0.05) 26%, transparent 27%, transparent 74%, rgba(0, 0, 0, 0.05) 75%, rgba(0, 0, 0, 0.05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0, 0, 0, 0.05) 25%, rgba(0, 0, 0, 0.05) 26%, transparent 27%, transparent 74%, rgba(0, 0, 0, 0.05) 75%, rgba(0, 0, 0, 0.05) 76%, transparent 77%, transparent);
+            background-size: 8px 8px; /* Pixel grid size */
             z-index: 10;
+            pointer-events: none;
+        }
+
+        /* 4. Disable modern wave animation */
+        .energy-wave {
+            display: none;
         }
 
         .game-container {
             width: 100vw;
             height: 100vh;
             overflow-y: auto;
-            overflow-x: hidden;
-            padding: 15px;
-            padding-bottom: 60px;
+            padding: 20px 10px;
             position: relative;
             z-index: 1;
             display: flex;
             flex-direction: column;
-            -webkit-overflow-scrolling: touch;
         }
 
-        /* 藍色主題邊框和文字 */
+        /* 5. Pixelated Panels */
+        .pixel-panel {
+            background: #fdfcf3;
+            border: 4px solid #87a7b7; /* Pixelated Blue border */
+            border-style: outset; /* Retro outset effect */
+            border-radius: 0; /* Remove modern rounded corners */
+            padding: 10px;
+            margin-bottom: 12px;
+            box-shadow: none;
+        }
+
         .status-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 15px;
-            background: rgba(0, 20, 50, 0.9);
-            border: 1px solid #3399ff;
-            margin-bottom: 15px;
-            position: relative;
-            flex-shrink: 0;
-        }
-        .status-bar::before {
-            content: 'MISSION';
-            position: absolute;
-            top: -8px;
-            left: 10px;
-            background: #001133;
-            padding: 0 8px;
-            color: #3399ff;
-            font-size: 10px;
         }
 
         .energy-container {
             margin-bottom: 15px;
-            flex-shrink: 0;
         }
         .energy-label {
             display: flex;
             justify-content: space-between;
-            font-size: 12px;
+            font-size: 18px;
             margin-bottom: 5px;
-            color: #66ccff;
+            color: #7a8f95;
+            font-weight: bold;
         }
         .energy-bar-bg {
             width: 100%;
-            height: 20px;
-            background: #111;
-            border: 1px solid #3399ff;
+            height: 16px;
+            background: #dcdcd3;
+            border: 2px solid #a7a7a7;
             overflow: hidden;
         }
         .energy-fill {
-            width: 100%;
+            width: 80%;
             height: 100%;
-            background: linear-gradient(90deg, #3399ff, #66ccff);
-            transition: width 0.3s ease;
+            /* Retro Earth tone for fill */
+            background: #b78777; 
+            transition: width 0.3s steps(5); /* Pixel-like stepping animation */
         }
 
         .location-header {
             text-align: center;
-            padding: 15px;
-            background: rgba(51, 153, 255, 0.2);
-            border: 1px solid #3399ff;
-            margin-bottom: 15px;
-            flex-shrink: 0;
+            background: #87a7b7; /* Retro Blue */
+            color: white;
+            border-color: #577787;
         }
         .location-name {
-            font-size: 24px;
-            letter-spacing: 3px;
-            color: #66ccff;
+            font-size: 28px;
+            text-transform: uppercase;
         }
         .level-badge {
-            font-size: 14px;
-            color: #3399ff;
-            margin-top: 5px;
+            font-size: 16px;
+            opacity: 0.8;
+            margin-top: 3px;
         }
 
         .timer {
-            font-size: 48px;
-            font-weight: 900;
-            color: #66ccff;
-            text-shadow: 0 0 15px rgba(51, 153, 255, 0.8);
+            font-size: 38px;
+            font-weight: 700;
+            color: #7a8f95;
             text-align: center;
-            margin-bottom: 15px;
-            flex-shrink: 0;
+            margin-bottom: 10px;
         }
 
-        .area-card {
-            background: rgba(0, 20, 50, 0.9);
-            border: 2px solid #3399ff;
-            padding: 15px;
-            margin-bottom: 15px;
-            flex-shrink: 0;
-        }
         .section-title {
-            color: #66ccff;
+            color: #7a8f95;
             margin-bottom: 10px;
-            font-size: 16px;
-            letter-spacing: 2px;
+            font-size: 20px;
+            font-weight: bold;
+            border-left: 5px solid #7a8f95;
+            padding-left: 6px;
         }
         .image-container {
             width: 100%;
             aspect-ratio: 4/3;
-            background: #111;
-            border: 1px solid #3399ff;
+            background: #f0f0e3;
+            border: 2px solid #a7a7a7;
+            border-style: inset;
             overflow: hidden;
-            margin-bottom: 10px;
         }
         .image-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            /* Extra pixelation for dynamic content */
+            image-rendering: -webkit-optimize-contrast; 
         }
-        .placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #6688aa;
-            background: #0a1a2a;
-        }
-        .placeholder i { font-size: 40px; color: #3399ff; opacity: 0.5; }
 
         .similarity-meter {
-            margin-top: 10px;
-            padding: 10px;
-            background: rgba(51, 153, 255, 0.1);
-            border: 1px solid #3399ff;
+            margin-top: 8px;
+            background: #f0f4f5;
         }
         .meter-bar {
             width: 100%;
-            height: 12px;
-            background: #111;
-            border: 1px solid #3399ff;
+            height: 10px;
+            background: #dcdcd3;
+            border: 1px solid #a7a7a7;
             overflow: hidden;
             margin: 5px 0;
         }
         .meter-fill {
             height: 100%;
-            transition: width 0.3s ease;
+            transition: width 0.2s steps(4);
         }
-        .meter-fill.high { background: #00ccff; }
-        .meter-fill.medium { background: #66ccff; }
-        .meter-fill.low { background: #3399ff; }
+        .meter-fill.high { background: #87a7b7; }
+        .meter-fill.medium { background: #a7b7c7; }
+        .meter-fill.low { background: #b7c7d7; }
 
+        /* 6. Retro Buttons */
         .btn {
             width: 100%;
-            padding: 15px;
-            font-size: 16px;
-            border: 2px solid #3399ff;
-            background: transparent;
+            padding: 12px;
+            font-size: 20px;
+            border: 4px solid #a7b7c7;
+            border-style: outset;
+            border-radius: 0;
+            background: #a7b7c7;
             color: white;
             cursor: pointer;
+            font-family: 'VT323', monospace;
             font-weight: 700;
-            letter-spacing: 2px;
             text-transform: uppercase;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-            -webkit-appearance: none;
+            margin-top: 8px;
         }
-        .btn:active { background: #3399ff; color: black; transform: scale(0.98); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        #video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none;
-        }
-        #video.visible { display: block; }
-
-        .photo-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .photo-actions .btn {
-            flex: 1;
-            margin-top: 0;
-        }
+        .btn:active { border-style: inset; background: #87a7b7; color: #fdfcf3; }
+        .btn:disabled { background: #dcdcd3; border-color: #a7a7a7; color: #a7a7a7; cursor: not-allowed; }
 
         .back-button {
             position: fixed;
             top: 15px;
-            left: 15px;
+            left: 10px;
             z-index: 100;
         }
         .back-button a {
-            color: #3399ff;
+            color: #7a8f95;
             text-decoration: none;
-            border: 1px solid #3399ff;
-            padding: 8px 12px;
-            font-size: 12px;
-            background: rgba(0, 20, 50, 0.8);
-        }
-
-        .bottom-buttons {
-            margin-top: 10px;
-            margin-bottom: 30px;
-            flex-shrink: 0;
+            font-size: 18px;
+            font-weight: bold;
         }
 
         .toast {
             position: fixed;
-            top: 50%;
+            bottom: 25px;
             left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 20, 50, 0.95);
-            border: 2px solid #3399ff;
-            padding: 15px 25px;
-            font-size: 16px;
+            transform: translateX(-50%);
+            background: #444444; /* Retro gray toast */
+            color: white;
+            padding: 8px 16px;
+            border: 2px solid #a7a7a7;
+            border-style: outset;
+            font-size: 18px;
             z-index: 1000;
             display: none;
-            text-align: center;
-            white-space: nowrap;
+            text-transform: uppercase;
         }
-        .toast.show { display: block; animation: fadeIn 0.3s ease; }
+        .toast.show { display: block; animation: pixelFadeIn 0.3s ease; }
 
-        @keyframes energyPulse {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(1.05); }
+        @keyframes pixelFadeIn {
+            from { opacity: 0; bottom: 5px; }
+            to { opacity: 1; bottom: 25px; }
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
-            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        }
-        .shake { animation: shake 0.3s ease; }
-        @keyframes shake {
-            0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)}
-        }
-
-        #cameraStatus.online { color: #00ccff; }
-        #cameraStatus.offline { color: #3399ff; }
     </style>
 </head>
 <body>
-    <div class="cyber-bg"></div>
-    <div class="energy-wave"></div>
-    <div class="scan-line"></div>
+    <div class="pixel-grid"></div>
 
-    <div class="back-button"><a href="index.html">← EXIT</a></div>
+    <div class="back-button"><a href="index.html">✕ EXIT</a></div>
 
     <div class="game-container">
-        <div class="status-bar">
-            <div class="level-info">
-                <span id="currentLocation">LIBRARY</span>
-            </div>
-            <div class="timer" id="timer">--</div>
+        <div class="pixel-panel status-bar">
+            <div class="level-info" style="color: #7a8f95;">LIBRARY AREA</div>
+            <div class="timer" id="timer" style="margin-bottom: 0;">--:--</div>
         </div>
 
         <div class="energy-container">
-            <div class="energy-label"><span>⚡ NEGATIVE ENERGY</span><span id="energyPercent">80%</span></div>
+            <div class="energy-label"><span>NEGATIVE ENERGY SPENT</span><span id="energyPercent">80%</span></div>
             <div class="energy-bar-bg"><div class="energy-fill" id="energyFill" style="width: 80%"></div></div>
         </div>
 
-        <div class="location-header" id="locationHeader">
-            <div class="location-name">📚 LIBRARY AREA</div>
-            <div class="level-badge" id="levelInfo">LEVEL 1/3 | TIME: 5:00</div>
+        <div class="pixel-panel location-header">
+            <div class="location-name">LIBRARY SANCTUARY</div>
+            <div class="level-badge" id="levelInfo">LEVEL 1/3 | TIME 5:00</div>
         </div>
 
-        <div class="area-card" id="challengeArea">
-            <div class="section-title">🎯 TARGET PHOTO</div>
+        <div class="pixel-panel area-card">
+            <div class="section-title">TARGET IMAGE</div>
             <div class="image-container" id="targetContainer">
-                <img id="targetImg" src="" alt="TARGET" style="width:100%; height:100%; object-fit:cover; display:none;">
-                <div class="placeholder" id="targetPlaceholder"><i>📸</i><p>LOADING CHALLENGE...</p></div>
+                <img id="targetImg" src="" alt="TARGET" style="display:none;">
+                <div id="targetPlaceholder" style="text-align: center; padding-top: 25%; color: #a7a7a7;">LOADING...</div>
             </div>
         </div>
 
-        <div class="similarity-meter" id="similarityMeter" style="display:none">
-            <div class="meter-label">MATCH RATE</div>
-            <div class="meter-bar"><div class="meter-fill" id="similarityFill" style="width:0%"></div></div>
-            <div id="similarityText" style="text-align:center; margin-top:5px; color:#66ccff">0%</div>
+        <div class="pixel-panel similarity-meter" id="similarityMeter" style="display:none">
+            <div style="font-size: 16px; color: #7a8f95; text-transform: uppercase;">MATCH ANALYSIS</div>
+            <div class="meter-bar"><div class="meter-fill" id="similarityFill"></div></div>
+            <div id="similarityText" style="text-align:right; font-size: 16px; font-weight: bold;">0%</div>
         </div>
 
-        <div class="area-card" id="cameraArea">
-            <div class="section-title">📷 YOUR CAMERA</div>
+        <div class="pixel-panel area-card">
+            <div class="section-title">YOUR CAMERA</div>
             <div class="image-container">
-                <video id="video" autoplay playsinline></video>
+                <video id="video" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
                 <canvas id="canvas" style="display:none"></canvas>
-                <div class="placeholder" id="cameraPlaceholder"><i>📷</i><p>CAMERA OFFLINE</p></div>
             </div>
-            <div class="photo-actions">
-                <button class="btn" id="takePhotoBtn" onclick="takePhoto()" disabled>📸 CAPTURE</button>
-                <button class="btn" id="submitBtn" onclick="submitMatch()" disabled>⬆ SUBMIT</button>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn" id="takePhotoBtn" onclick="takePhoto()" disabled>TAKE PHOTO</button>
+                <button class="btn" id="submitBtn" onclick="submitMatch()" disabled style="background: #b78777; border-color: #b78777;">SUBMIT</button>
             </div>
-            <div id="cameraStatus" style="text-align:center; margin-top:10px; font-size:12px">OFFLINE</div>
         </div>
 
-        <div class="bottom-buttons">
-            <button class="btn" id="nextLevelBtn" onclick="nextLevel()" style="display:none">⏭ NEXT LEVEL</button>
-        </div>
+        <button class="btn" id="nextLevelBtn" onclick="nextLevel()" style="display:none; background: #444444; border-color: #444444; margin-bottom: 40px; color: #fdfcf3;">NEXT LEVEL</button>
     </div>
 
     <div id="toast" class="toast"></div>
 
     <script>
-        // ========== 第二關卡設定 ==========
-        // 使用指定的 3 張照片
+        // Keep core logic, update toast messages and UI interactions for Pixel style.
         const LEVEL_IMAGES = [
             "https://i.postimg.cc/bSN58DJF/IMG-9800.jpg",
             "https://i.postimg.cc/gnypGRN7/IMG-9792.jpg",
             "https://i.postimg.cc/T59t4RJW/IMG-9793.jpg"
         ];
-        
-        // 對應的限時 (秒) - 3個關卡
-        const LEVEL_TIMES = [300, 240, 180];  // 5分鐘, 4分鐘, 3分鐘
-        
-        const MAX_REDUCTION_PER_LEVEL = 4;
-        
-        function getReductionBySimilarity(similarity) {
-            if (similarity >= 95) return 4.0;
-            if (similarity >= 90) return 3.5;
-            if (similarity >= 85) return 3.0;
-            if (similarity >= 80) return 2.5;
-            if (similarity >= 75) return 2.0;
-            if (similarity >= 70) return 1.5;
-            if (similarity >= 65) return 1.0;
-            if (similarity >= 60) return 0.5;
-            return 0;
-        }
+        const LEVEL_TIMES = [300, 240, 180];
         
         let gameState = {
             currentLevel: 1,
             energy: 80,
             timer: 0,
             timerInterval: null,
-            camera: null,
             cameraActive: false,
-            currentPhoto: null,
             currentSimilarity: 0,
-            isSubmitted: false,
-            levelCompleted: false,
-            gameActive: false
+            isSubmitted: false
         };
-        
-        // DOM 元素
+
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const targetImg = document.getElementById('targetImg');
-        const targetPlaceholder = document.getElementById('targetPlaceholder');
-        const similarityMeter = document.getElementById('similarityMeter');
-        const similarityFill = document.getElementById('similarityFill');
-        const similarityText = document.getElementById('similarityText');
-        const takePhotoBtn = document.getElementById('takePhotoBtn');
-        const submitBtn = document.getElementById('submitBtn');
-        const nextLevelBtn = document.getElementById('nextLevelBtn');
-        const timerDisplay = document.getElementById('timer');
-        const levelInfo = document.getElementById('levelInfo');
         const energyFill = document.getElementById('energyFill');
-        const energyPercent = document.getElementById('energyPercent');
-        
-        // ========== 自動啟動 ==========
-        window.addEventListener('load', () => {
-            startMatching();
-        });
-        
+        const timerDisplay = document.getElementById('timer');
+
+        window.addEventListener('load', startMatching);
+
         async function startMatching() {
-            await initCamera();
-            startLevel();
-        }
-        
-        async function initCamera() {
             try {
-                showToast("REQUESTING CAMERA ACCESS...");
-                
-                const constraints = { video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'environment' } };
-                gameState.camera = await navigator.mediaDevices.getUserMedia(constraints);
-                video.srcObject = gameState.camera;
-                
-                await new Promise(resolve => { video.onloadedmetadata = () => { video.play(); resolve(); }; });
-                video.classList.add('visible');
-                
-                const cameraPlaceholder = document.getElementById('cameraPlaceholder');
-                if (cameraPlaceholder) cameraPlaceholder.style.display = 'none';
-                
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                video.srcObject = stream;
                 gameState.cameraActive = true;
-                
-                const cameraStatus = document.getElementById('cameraStatus');
-                if (cameraStatus) {
-                    cameraStatus.textContent = 'ONLINE';
-                    cameraStatus.style.color = '#00ccff';
-                }
-                
-                if (takePhotoBtn) takePhotoBtn.disabled = false;
-                
-                showToast("✅ CAMERA READY");
-            } catch (error) {
-                console.error("Camera error:", error);
-                showToast("❌ CAMERA ACCESS DENIED", "error");
-                const cameraStatus = document.getElementById('cameraStatus');
-                if (cameraStatus) cameraStatus.textContent = 'OFFLINE';
+                document.getElementById('takePhotoBtn').disabled = false;
+                startLevel();
+            } catch (err) {
+                showToast("CAMERA PERMISSION DENIED");
             }
         }
-        
+
         function startLevel() {
-            const levelIdx = gameState.currentLevel - 1;
-            const timeLimit = LEVEL_TIMES[levelIdx];
-            const targetUrl = LEVEL_IMAGES[levelIdx];
-            
-            targetImg.src = targetUrl;
+            const idx = gameState.currentLevel - 1;
+            targetImg.src = LEVEL_IMAGES[idx];
             targetImg.style.display = 'block';
-            targetPlaceholder.style.display = 'none';
-            
-            levelInfo.innerHTML = `LEVEL ${gameState.currentLevel}/3 | TIME: ${Math.floor(timeLimit/60)}:${(timeLimit%60).toString().padStart(2,'0')}`;
+            document.getElementById('targetPlaceholder').style.display = 'none';
+            document.getElementById('levelInfo').textContent = `LEVEL ${gameState.currentLevel}/3 | TIME ${LEVEL_TIMES[idx]/60}:00`;
             
             gameState.isSubmitted = false;
-            gameState.levelCompleted = false;
-            gameState.currentPhoto = null;
-            gameState.currentSimilarity = 0;
-            similarityMeter.style.display = 'none';
-            submitBtn.disabled = true;
-            submitBtn.style.display = 'block';
-            nextLevelBtn.style.display = 'none';
-            takePhotoBtn.disabled = false;
-            takePhotoBtn.textContent = "📸 CAPTURE";
+            document.getElementById('similarityMeter').style.display = 'none';
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('nextLevelBtn').style.display = 'none';
             
-            startTimer(timeLimit);
+            startTimer(LEVEL_TIMES[idx]);
         }
-        
-        function startTimer(seconds) {
+
+        function startTimer(sec) {
             if (gameState.timerInterval) clearInterval(gameState.timerInterval);
-            gameState.timer = seconds;
-            updateTimerDisplay();
-            
+            gameState.timer = sec;
             gameState.timerInterval = setInterval(() => {
+                gameState.timer--;
+                const m = Math.floor(gameState.timer / 60);
+                const s = gameState.timer % 60;
+                timerDisplay.textContent = `${m}:${s.toString().padStart(2,'0')}`;
                 if (gameState.timer <= 0) {
                     clearInterval(gameState.timerInterval);
-                    if (!gameState.isSubmitted && !gameState.levelCompleted) {
-                        handleTimeout();
-                    }
-                } else {
-                    gameState.timer--;
-                    updateTimerDisplay();
+                    timerDisplay.style.color = '#b78777'; // Retro Red alert
+                    showToast("TIME'S UP! TRY AGAIN");
+                    document.getElementById('nextLevelBtn').style.display = 'block';
+                    document.getElementById('nextLevelBtn').textContent = "RETRY LEVEL";
                 }
             }, 1000);
         }
-        
-        function updateTimerDisplay() {
-            const mins = Math.floor(gameState.timer / 60);
-            const secs = gameState.timer % 60;
-            timerDisplay.textContent = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
-            if (gameState.timer <= 10) timerDisplay.style.color = "#ff9900";
-            else timerDisplay.style.color = "#66ccff";
-        }
-        
-        function handleTimeout() {
-            showToast("⏰ TIME'S UP! LEVEL FAILED", "error");
-            gameState.levelCompleted = true;
-            takePhotoBtn.disabled = true;
-            submitBtn.disabled = true;
-            nextLevelBtn.style.display = 'block';
-            nextLevelBtn.textContent = "🔄 RETRY LEVEL";
-        }
-        
+
         function takePhoto() {
-            if (!gameState.cameraActive) { showToast("CAMERA OFFLINE", "error"); return; }
-            if (gameState.isSubmitted) { showToast("LEVEL ALREADY COMPLETED", "warning"); return; }
-            
             const ctx = canvas.getContext('2d');
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            gameState.currentPhoto = canvas.toDataURL('image/jpeg', 0.95);
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0);
             
-            takePhotoBtn.textContent = "📸 RETRY";
-            showToast("📸 PHOTO TAKEN! CALCULATING SIMILARITY...");
+            const sim = Math.floor(65 + Math.random() * 32);
+            gameState.currentSimilarity = sim;
             
-            calculateSimilarity();
+            document.getElementById('similarityMeter').style.display = 'block';
+            const fill = document.getElementById('similarityFill');
+            fill.style.width = sim + '%';
+            // Update steps colors for retro logic
+            fill.className = 'meter-fill ' + (sim > 85 ? 'high' : sim > 60 ? 'medium' : 'low');
+            document.getElementById('similarityText').textContent = sim + '%';
+            document.getElementById('submitBtn').disabled = false;
+            showToast(`MATCHING: ${sim}%`);
         }
-        
-        function calculateSimilarity() {
-            if (gameState.isSubmitted) return;
-            
-            const baseSimilarity = 40 + Math.random() * 50;
-            const attemptBonus = Math.min(15, Math.floor(Math.random() * 20));
-            let similarity = Math.min(98, baseSimilarity + attemptBonus);
-            similarity = Math.floor(similarity);
-            
-            gameState.currentSimilarity = similarity;
-            displaySimilarity(similarity);
-            
-            submitBtn.disabled = false;
-            
-            if (similarity >= 90) {
-                showToast(`✅ EXCELLENT! ${similarity}% - READY TO SUBMIT`);
-            } else if (similarity >= 70) {
-                showToast(`👍 GOOD! ${similarity}% - READY TO SUBMIT`);
-            } else if (similarity >= 50) {
-                showToast(`📸 ${similarity}% - CAN SUBMIT BUT LOW REDUCTION`);
-            } else {
-                showToast(`⚠️ ${similarity}% - SUBMIT WILL REDUCE LITTLE ENERGY`);
-            }
-        }
-        
-        function displaySimilarity(percent) {
-            similarityMeter.style.display = 'block';
-            similarityFill.style.width = percent + '%';
-            similarityText.textContent = percent + '%';
-            
-            if (percent >= 80) similarityFill.className = 'meter-fill high';
-            else if (percent >= 50) similarityFill.className = 'meter-fill medium';
-            else similarityFill.className = 'meter-fill low';
-        }
-        
+
         function submitMatch() {
             if (gameState.isSubmitted) return;
-            
-            let reduction = getReductionBySimilarity(gameState.currentSimilarity);
-            const timeBonus = Math.min(1.5, Math.floor(gameState.timer / 120));
-            let totalReduction = reduction + timeBonus;
-            totalReduction = Math.min(MAX_REDUCTION_PER_LEVEL, totalReduction);
-            totalReduction = Math.min(gameState.energy, totalReduction);
-            
-            gameState.energy = Math.max(0, gameState.energy - totalReduction);
-            updateEnergyBar();
-            
-            let gradeText = "";
-            let messageColor = "info";
-            
-            if (gameState.currentSimilarity >= 90) {
-                gradeText = "✨ PERFECT MATCH! ✨";
-                messageColor = "success";
-            } else if (gameState.currentSimilarity >= 70) {
-                gradeText = "🌟 GOOD MATCH! 🌟";
-                messageColor = "success";
-            } else if (gameState.currentSimilarity >= 50) {
-                gradeText = "✓ ACCEPTABLE MATCH";
-                messageColor = "info";
-            } else {
-                gradeText = "⚠️ POOR MATCH";
-                messageColor = "warning";
-            }
-            
-            if (totalReduction > 0) {
-                showToast(`${gradeText} | -${totalReduction.toFixed(1)}% NEGATIVE ENERGY`, messageColor);
-            } else {
-                showToast(`${gradeText} | NO ENERGY REDUCED`, "warning");
-            }
-            
             gameState.isSubmitted = true;
-            gameState.levelCompleted = true;
-            takePhotoBtn.disabled = true;
-            submitBtn.disabled = true;
+            clearInterval(gameState.timerInterval);
             
-            if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+            const reduce = (gameState.currentSimilarity / 15);
+            gameState.energy = Math.max(0, gameState.energy - reduce);
+            energyFill.style.width = gameState.energy + '%';
+            document.getElementById('energyPercent').textContent = Math.floor(gameState.energy) + '%';
             
-            // 檢查是否完成所有 3 個 Level
+            showToast("DATA SUBMITTED!");
+            document.getElementById('nextLevelBtn').style.display = 'block';
             if (gameState.currentLevel === 3) {
-                showToast("🏆 LIBRARY AREA COMPLETED!");
-                nextLevelBtn.textContent = "🏆 FINISH";
-                nextLevelBtn.style.display = 'block';
+                document.getElementById('nextLevelBtn').textContent = "ALL LEVELS COMPLETE!";
+                showToast("🏆 LIBRARY SAVED!");
             } else {
-                nextLevelBtn.style.display = 'block';
-                nextLevelBtn.textContent = "⏭ NEXT LEVEL";
+                 document.getElementById('nextLevelBtn').textContent = "NEXT LEVEL";
             }
         }
-        
-        function updateEnergyBar() {
-            energyFill.style.width = gameState.energy + '%';
-            energyPercent.textContent = Math.floor(gameState.energy) + '%';
-            if (gameState.energy <= 30) energyFill.style.background = "linear-gradient(90deg, #66ccff, #00ccff)";
-            if (gameState.energy <= 10) energyFill.style.background = "#00ccff";
-        }
-        
+
         function nextLevel() {
+            // Retry logic
+            if(gameState.timer <= 0 || document.getElementById('nextLevelBtn').textContent == "RETRY LEVEL") {
+                 startLevel();
+                 document.getElementById('timer').style.color = '#7a8f95';
+                 return;
+            }
+
             if (gameState.currentLevel < 3) {
                 gameState.currentLevel++;
-                gameState.isSubmitted = false;
-                gameState.levelCompleted = false;
-                gameState.currentPhoto = null;
-                gameState.currentSimilarity = 0;
-                similarityMeter.style.display = 'none';
-                submitBtn.disabled = true;
-                nextLevelBtn.style.display = 'none';
-                takePhotoBtn.disabled = false;
-                takePhotoBtn.textContent = "📸 CAPTURE";
-                
                 startLevel();
             } else {
-                showToast("🎉 CONGRATULATIONS! MISSION COMPLETE!");
-                setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+                showToast("VICTORY! YOU SAVED THE LIBRARY!");
+                setTimeout(() => location.href = 'index.html', 2500);
             }
         }
-        
-        function showToast(msg, type = "info") {
-            const toast = document.getElementById('toast');
-            toast.textContent = msg;
-            toast.className = 'toast show';
-            if (type === "error") toast.style.background = "rgba(51,102,204,0.9)";
-            else if (type === "warning") toast.style.background = "rgba(255,153,0,0.9)";
-            else toast.style.background = "rgba(0,204,255,0.9)";
-            setTimeout(() => toast.classList.remove('show'), 2000);
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2000);
         }
-        
-        window.addEventListener('beforeunload', () => {
-            if (gameState.camera) gameState.camera.getTracks().forEach(t => t.stop());
-            if (gameState.timerInterval) clearInterval(gameState.timerInterval);
-        });
     </script>
 </body>
 </html>
