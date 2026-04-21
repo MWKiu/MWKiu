@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Match AR! - Story Transition</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            image-rendering: pixelated;
+        }
+
+        body {
+            background-color: #e7e7d7;
+            font-family: 'VT323', monospace;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            overflow: hidden;
+            padding-bottom: 50px;
+        }
+
+        /* 角色圖片容器 */
+        .character-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: -20px;
+        }
+
+        .character-img {
+            height: 60vh;
+            max-width: 90%;
+            object-fit: contain;
+        }
+
+        /* 對話對話框 */
+        .dialogue-box {
+            width: 90%;
+            background: #fdfcf3;
+            border: 4px solid #87a7b7;
+            border-style: outset;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .name-tag {
+            background: #87a7b7;
+            color: white;
+            padding: 5px 15px;
+            position: absolute;
+            top: -25px;
+            left: 10px;
+            font-size: 24px;
+        }
+
+        .dialogue-text {
+            font-size: 26px;
+            color: #444444;
+            min-height: 80px;
+            line-height: 1.2;
+            margin-bottom: 10px;
+        }
+
+        .next-btn {
+            float: right;
+            background: #87a7b7;
+            color: white;
+            border: none;
+            padding: 5px 20px;
+            font-family: 'VT323', monospace;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* 彈出視窗 (Modal) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #fdfcf3;
+            border: 6px solid #b78777;
+            padding: 30px;
+            width: 85%;
+            text-align: center; /* 內容置中 */
+            box-shadow: 0 0 0 4px #fdfcf3, 0 0 0 8px #444444;
+        }
+
+        .modal-title {
+            color: #b78777;
+            font-size: 32px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .modal-body {
+            font-size: 22px;
+            color: #444444;
+            line-height: 1.4;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            background: #444444;
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            font-family: 'VT323', monospace;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="character-container">
+        <img src="Study_Lion.png" alt="Study Lion" class="character-img">
+    </div>
+
+    <div class="dialogue-box">
+        <div class="name-tag">溫獅(Study Lion)</div>
+        <div class="dialogue-text" id="textDisplay"></div>
+        <button class="next-btn" id="nextBtn" onclick="advanceDialogue()">-></button>
+    </div>
+
+    <div class="modal" id="rewardModal">
+        <div class="modal-content">
+            <div class="modal-title">‘Bookmark’ Get!</div>
+            <div class="modal-body">
+                Looks like an old bookmark…<br>
+                溫獅(Study Lion) must had used this for a long time.<br><br>
+                Please keep it until the final war with the villain…<br>
+                Please move to the next location.
+            </div>
+            <button class="close-btn" onclick="location.href='index.html'">OK</button>
+        </div>
+    </div>
+
+    <script>
+        const dialogues = [
+            "Oh my gosh! I feel so much better right now!! Tell me when you need to study.",
+            "Call me! I will get you a seat anytime anywhere!",
+            "Peace at last. Knowledge is power. Take this Bookmark."
+        ];
+
+        let currentIndex = 0;
+        const textDisplay = document.getElementById('textDisplay');
+        const nextBtn = document.getElementById('nextBtn');
+        const modal = document.getElementById('rewardModal');
+
+        function updateDialogue() {
+            textDisplay.textContent = dialogues[currentIndex];
+            
+            // 最後一段對話時按鈕變成 "Next"
+            if (currentIndex === dialogues.length - 1) {
+                nextBtn.textContent = "Next";
+            } else {
+                nextBtn.textContent = "->";
+            }
+        }
+
+        function advanceDialogue() {
+            if (currentIndex < dialogues.length - 1) {
+                currentIndex++;
+                updateDialogue();
+            } else {
+                // 顯示彈出視窗
+                modal.style.display = "flex";
+            }
+        }
+
+        // 初始化
+        updateDialogue();
+    </script>
+</body>
+</html>
