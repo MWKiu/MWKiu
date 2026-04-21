@@ -30,10 +30,7 @@
 
         .pixel-grid {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background-image: linear-gradient(0deg, transparent 24%, rgba(0, 0, 0, 0.05) 25%, rgba(0, 0, 0, 0.05) 26%, transparent 27%, transparent 74%, rgba(0, 0, 0, 0.05) 75%, rgba(0, 0, 0, 0.05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0, 0, 0, 0.05) 25%, rgba(0, 0, 0, 0.05) 26%, transparent 27%, transparent 74%, rgba(0, 0, 0, 0.05) 75%, rgba(0, 0, 0, 0.05) 76%, transparent 77%, transparent);
             background-size: 8px 8px;
             z-index: 10;
@@ -55,7 +52,6 @@
             background: #fdfcf3;
             border: 4px solid #87a7b7;
             border-style: outset;
-            border-radius: 0;
             padding: 10px;
             margin-bottom: 12px;
         }
@@ -66,9 +62,7 @@
             align-items: center;
         }
 
-        .energy-container {
-            margin-bottom: 15px;
-        }
+        .energy-container { margin-bottom: 15px; }
         .energy-label {
             display: flex;
             justify-content: space-between;
@@ -97,15 +91,7 @@
             color: white;
             border-color: #577787;
         }
-        .location-name {
-            font-size: 28px;
-            text-transform: uppercase;
-        }
-        .level-badge {
-            font-size: 16px;
-            opacity: 0.8;
-            margin-top: 3px;
-        }
+        .location-name { font-size: 28px; text-transform: uppercase; }
 
         .timer {
             font-size: 38px;
@@ -134,135 +120,59 @@
             position: relative;
         }
         
-        .image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .image-container img { width: 100%; height: 100%; object-fit: cover; }
         
-        #video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            background: #2a2a2a;
-        }
+        #video { width: 100%; height: 100%; object-fit: cover; display: none; background: #2a2a2a; }
         
         .camera-placeholder {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: #2a2a2a;
-            color: #87a7b7;
-            font-size: 16px;
-            text-align: center;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            background: #2a2a2a; color: #87a7b7;
             z-index: 5;
         }
         
-        .camera-placeholder.hidden {
-            display: none;
-        }
+        .camera-placeholder.hidden { display: none; }
 
-        .similarity-meter {
-            margin-top: 8px;
-            background: #f0f4f5;
-        }
+        .similarity-meter { margin-top: 8px; background: #f0f4f5; }
         .meter-bar {
-            width: 100%;
-            height: 10px;
-            background: #dcdcd3;
-            border: 1px solid #a7a7a7;
-            overflow: hidden;
-            margin: 5px 0;
+            width: 100%; height: 100%; height: 10px;
+            background: #dcdcd3; border: 1px solid #a7a7a7;
+            overflow: hidden; margin: 5px 0;
         }
-        .meter-fill {
-            height: 100%;
-            transition: width 0.2s steps(4);
-            width: 0%;
-        }
+        .meter-fill { height: 100%; transition: width 0.2s steps(4); width: 0%; }
         .meter-fill.high { background: #87a7b7; }
         .meter-fill.medium { background: #a7b7c7; }
         .meter-fill.low { background: #b7c7d7; }
 
         .btn {
-            width: 100%;
-            padding: 12px;
-            font-size: 20px;
-            border: 4px solid #a7b7c7;
-            border-style: outset;
-            border-radius: 0;
-            background: #a7b7c7;
-            color: white;
-            cursor: pointer;
-            font-family: 'VT323', monospace;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-top: 8px;
+            width: 100%; padding: 12px; font-size: 20px;
+            border: 4px solid #a7b7c7; border-style: outset;
+            background: #a7b7c7; color: white; cursor: pointer;
+            font-family: 'VT323', monospace; font-weight: 700;
+            text-transform: uppercase; margin-top: 8px;
         }
-        .btn:active { border-style: inset; background: #87a7b7; color: #fdfcf3; transform: translate(1px, 1px); }
-        .btn:disabled { background: #dcdcd3; border-color: #a7a7a7; color: #a7a7a7; cursor: not-allowed; opacity: 0.6; }
+        .btn:active { border-style: inset; background: #87a7b7; transform: translate(1px, 1px); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        .back-button {
-            position: fixed;
-            top: 15px;
-            left: 10px;
-            z-index: 100;
-        }
+        .back-button { position: fixed; top: 15px; left: 10px; z-index: 100; }
         .back-button a {
-            color: #7a8f95;
-            text-decoration: none;
-            font-size: 18px;
-            font-weight: bold;
-            background: #fdfcf3;
-            padding: 4px 8px;
-            border: 2px solid #87a7b7;
+            color: #7a8f95; text-decoration: none; font-size: 18px;
+            background: #fdfcf3; padding: 4px 8px; border: 2px solid #87a7b7;
         }
 
         .toast {
-            position: fixed;
-            bottom: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #444444;
-            color: white;
-            padding: 8px 16px;
-            border: 2px solid #a7a7a7;
-            border-style: outset;
-            font-size: 18px;
-            z-index: 1000;
-            display: none;
-            text-transform: uppercase;
-            white-space: nowrap;
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+            background: #444444; color: white; padding: 8px 16px;
+            border: 2px solid #a7a7a7; border-style: outset; z-index: 1000;
+            display: none; text-transform: uppercase;
         }
         .toast.show { display: block; animation: pixelFadeIn 0.3s ease; }
 
-        .photo-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .photo-actions .btn {
-            margin-top: 0;
-        }
-
-        @keyframes pixelFadeIn {
-            from { opacity: 0; bottom: 5px; }
-            to { opacity: 1; bottom: 25px; }
-        }
+        @keyframes pixelFadeIn { from { opacity: 0; bottom: 5px; } to { opacity: 1; bottom: 25px; } }
         
-        .debug-status {
-            font-size: 12px;
-            color: #b78777;
-            text-align: center;
-            margin-top: 8px;
-            font-family: monospace;
-        }
+        .debug-status { font-size: 12px; color: #b78777; text-align: center; margin-top: 8px; font-family: monospace; }
     </style>
 </head>
 <body>
@@ -308,10 +218,9 @@
                 <div id="cameraPlaceholder" class="camera-placeholder">
                     <span>📷</span>
                     <span>WAITING FOR CAMERA...</span>
-                    <span style="font-size: 12px;">Click ALLOW when prompted</span>
                 </div>
             </div>
-            <div class="photo-actions">
+            <div class="photo-actions" style="display: flex; gap: 10px; margin-top: 10px;">
                 <button class="btn" id="takePhotoBtn" onclick="takePhoto()" disabled>📸 TAKE PHOTO</button>
                 <button class="btn" id="submitBtn" onclick="submitMatch()" disabled style="background: #b78777; border-color: #b78777;">⬆ SUBMIT</button>
             </div>
@@ -324,16 +233,15 @@
     <div id="toast" class="toast"></div>
 
     <script>
-        // 使用可靠的圖片備援
-        const FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2387a7b7'/%3E%3Ctext x='50' y='55' text-anchor='middle' fill='white' font-size='14'%3EBOOK%3C/text%3E%3C/svg%3E";
-        
+        // 設定本地圖片路徑
         const LEVEL_IMAGES = [
-            "https://picsum.photos/id/20/400/300",
-            "https://picsum.photos/id/24/400/300", 
-            "https://picsum.photos/id/42/400/300"
+            "1-1.png",
+            "2-1.png",
+            "3-1.png"
         ];
         
         const LEVEL_TIMES = [300, 240, 180];
+        const FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2387a7b7'/%3E%3Ctext x='50' y='55' text-anchor='middle' fill='white' font-size='14'%3EIMAGE ERROR%3C/text%3E%3C/svg%3E";
         
         let gameState = {
             currentLevel: 1,
@@ -364,61 +272,26 @@
         const cameraStatus = document.getElementById('cameraStatus');
         const levelInfo = document.getElementById('levelInfo');
 
-        window.addEventListener('load', () => {
+        window.onload = () => {
             showToast("PRESS ALLOW FOR CAMERA");
-            startMatching();
-        });
-        
-        async function startMatching() {
-            await initCamera();
-            // 相機初始化後再開始關卡
-        }
+            initCamera();
+        };
         
         async function initCamera() {
             try {
-                cameraStatus.textContent = "⚡ CAMERA: REQUESTING PERMISSION...";
-                const constraints = { 
-                    video: { 
-                        facingMode: 'environment',
-                        width: { ideal: 640 },
-                        height: { ideal: 480 }
-                    } 
-                };
+                const constraints = { video: { facingMode: 'environment' } };
                 gameState.cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
                 video.srcObject = gameState.cameraStream;
-                
-                await new Promise((resolve) => {
-                    video.onloadedmetadata = () => {
-                        video.play();
-                        resolve();
-                    };
-                });
-                
-                // 設定 canvas 尺寸
-                setTimeout(() => {
-                    canvas.width = video.videoWidth || 640;
-                    canvas.height = video.videoHeight || 480;
-                }, 100);
-                
                 video.style.display = 'block';
                 cameraPlaceholder.classList.add('hidden');
                 gameState.cameraActive = true;
                 takePhotoBtn.disabled = false;
                 cameraStatus.textContent = "✅ CAMERA: ONLINE";
-                cameraStatus.style.color = "#87a7b7";
-                showToast("✅ CAMERA READY! TAKE A PHOTO");
-                
-                // 相機就緒後開始遊戲
                 startLevel();
-                
             } catch (error) {
-                console.error("Camera error:", error);
-                cameraStatus.textContent = "❌ CAMERA: DENIED - DEMO MODE";
-                cameraStatus.style.color = "#b78777";
-                cameraPlaceholder.innerHTML = "<span>📷</span><span>NO CAMERA ACCESS</span><span style='font-size:12px;'>DEMO MODE ACTIVE</span>";
-                showToast("⚠️ CAMERA DENIED - USING DEMO MODE");
+                cameraStatus.textContent = "❌ CAMERA: DEMO MODE";
                 gameState.cameraActive = false;
-                takePhotoBtn.disabled = false; // Demo mode still works
+                takePhotoBtn.disabled = false;
                 startLevel();
             }
         }
@@ -426,33 +299,24 @@
         function startLevel() {
             const idx = gameState.currentLevel - 1;
             const timeLimit = LEVEL_TIMES[idx];
-            const targetUrl = LEVEL_IMAGES[idx];
             
-            targetImg.src = targetUrl;
+            targetImg.src = LEVEL_IMAGES[idx];
             targetImg.onload = () => {
                 targetImg.style.display = 'block';
                 targetPlaceholder.style.display = 'none';
             };
             targetImg.onerror = () => {
                 targetImg.src = FALLBACK_IMAGE;
-                targetImg.style.display = 'block';
-                targetPlaceholder.style.display = 'none';
-                showToast("⚠️ Using fallback target image");
             };
             
-            levelInfo.textContent = `LEVEL ${gameState.currentLevel}/3 | TIME ${Math.floor(timeLimit/60)}:${(timeLimit%60).toString().padStart(2,'0')}`;
-            
+            levelInfo.textContent = `LEVEL ${gameState.currentLevel}/3 | TIME ${Math.floor(timeLimit/60)}:00`;
             gameState.isSubmitted = false;
             gameState.levelCompleted = false;
-            gameState.currentSimilarity = 0;
             similarityMeter.style.display = 'none';
             submitBtn.disabled = true;
             nextLevelBtn.style.display = 'none';
-            takePhotoBtn.disabled = !gameState.cameraActive;
             takePhotoBtn.textContent = "📸 TAKE PHOTO";
-            
             startTimer(timeLimit);
-            showToast(`LEVEL ${gameState.currentLevel} STARTED!`);
         }
         
         function startTimer(seconds) {
@@ -462,9 +326,7 @@
             gameState.timerInterval = setInterval(() => {
                 if (gameState.timer <= 0) {
                     clearInterval(gameState.timerInterval);
-                    if (!gameState.isSubmitted && !gameState.levelCompleted) {
-                        handleTimeout();
-                    }
+                    handleTimeout();
                 } else {
                     gameState.timer--;
                     updateTimerDisplay();
@@ -476,136 +338,58 @@
             const mins = Math.floor(gameState.timer / 60);
             const secs = gameState.timer % 60;
             timerDisplay.textContent = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
-            if (gameState.timer <= 10) {
-                timerDisplay.style.color = '#b78777';
-            } else {
-                timerDisplay.style.color = '#7a8f95';
-            }
         }
         
         function handleTimeout() {
-            showToast("⏰ TIME'S UP! PRESS RETRY");
-            gameState.levelCompleted = true;
-            takePhotoBtn.disabled = true;
-            submitBtn.disabled = true;
+            showToast("⏰ TIME'S UP!");
             nextLevelBtn.style.display = 'block';
             nextLevelBtn.textContent = "🔄 RETRY LEVEL";
-            if (gameState.timerInterval) clearInterval(gameState.timerInterval);
         }
         
         function takePhoto() {
-            if (gameState.isSubmitted) {
-                showToast("LEVEL ALREADY COMPLETED!");
-                return;
-            }
-            
             if (!gameState.cameraActive) {
-                // Demo mode
-                const demoSim = Math.floor(60 + Math.random() * 35);
-                gameState.currentSimilarity = demoSim;
-                displaySimilarity(demoSim);
-                submitBtn.disabled = false;
-                takePhotoBtn.textContent = "📸 RETRY";
-                showToast(`📸 DEMO PHOTO: ${demoSim}% MATCH`);
-                return;
+                gameState.currentSimilarity = Math.floor(65 + Math.random() * 30);
+            } else {
+                const ctx = canvas.getContext('2d');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                gameState.currentSimilarity = Math.floor(60 + Math.random() * 38);
             }
-            
-            // Real camera mode
-            const ctx = canvas.getContext('2d');
-            if (canvas.width === 0 || canvas.height === 0) {
-                canvas.width = video.videoWidth || 640;
-                canvas.height = video.videoHeight || 480;
-            }
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            
-            // 模擬相似度計算 (實際 AR 匹配模擬)
-            const similarity = Math.floor(55 + Math.random() * 40);
-            gameState.currentSimilarity = similarity;
-            displaySimilarity(similarity);
+            displaySimilarity(gameState.currentSimilarity);
             submitBtn.disabled = false;
-            takePhotoBtn.textContent = "📸 RETRY";
-            showToast(`📸 PHOTO ANALYZED: ${similarity}% MATCH`);
+            showToast(`MATCH: ${gameState.currentSimilarity}%`);
         }
         
         function displaySimilarity(percent) {
             similarityMeter.style.display = 'block';
             similarityFill.style.width = percent + '%';
             similarityText.textContent = percent + '%';
-            
-            if (percent >= 80) {
-                similarityFill.className = 'meter-fill high';
-            } else if (percent >= 60) {
-                similarityFill.className = 'meter-fill medium';
-            } else {
-                similarityFill.className = 'meter-fill low';
-            }
         }
         
         function submitMatch() {
-            if (gameState.isSubmitted) {
-                showToast("ALREADY SUBMITTED!");
-                return;
-            }
-            
-            if (gameState.currentSimilarity === 0) {
-                showToast("TAKE A PHOTO FIRST!");
-                return;
-            }
-            
             gameState.isSubmitted = true;
-            gameState.levelCompleted = true;
-            
             if (gameState.timerInterval) clearInterval(gameState.timerInterval);
             
-            // 計算能量消耗 (匹配度越高消耗越少)
-            const reduction = Math.max(5, Math.min(25, Math.floor((100 - gameState.currentSimilarity) / 4)));
+            const reduction = Math.max(5, Math.floor((100 - gameState.currentSimilarity) / 4));
             gameState.energy = Math.max(0, gameState.energy - reduction);
             energyFill.style.width = gameState.energy + '%';
-            energyPercent.textContent = Math.floor(gameState.energy) + '%';
+            energyPercent.textContent = gameState.energy + '%';
             
-            takePhotoBtn.disabled = true;
             submitBtn.disabled = true;
-            
-            showToast(`⚡ ENERGY -${reduction}% | MATCH: ${gameState.currentSimilarity}%`);
-            
-            if (gameState.currentLevel === 3) {
-                showToast("🏆 LIBRARY SANCTUARY SAVED! 🏆");
-                nextLevelBtn.style.display = 'block';
-                nextLevelBtn.textContent = "🏆 COMPLETE! 🏆";
-            } else {
-                nextLevelBtn.style.display = 'block';
-                nextLevelBtn.textContent = "▶ NEXT LEVEL";
-            }
+            nextLevelBtn.style.display = 'block';
+            nextLevelBtn.textContent = gameState.currentLevel === 3 ? "🏆 COMPLETE! 🏆" : "▶ NEXT LEVEL";
         }
         
         function nextLevel() {
-            // Retry logic for timeout
             if (gameState.timer <= 0 && !gameState.isSubmitted) {
-                gameState.currentLevel = gameState.currentLevel;
                 startLevel();
-                timerDisplay.style.color = '#7a8f95';
-                return;
-            }
-            
-            if (gameState.currentLevel < 3 && gameState.isSubmitted) {
+            } else if (gameState.currentLevel < 3) {
                 gameState.currentLevel++;
                 startLevel();
-            } else if (gameState.currentLevel === 3 && gameState.isSubmitted) {
-                showToast("🎉 CONGRATULATIONS! YOU WIN! 🎉");
-                setTimeout(() => {
-                    if (confirm("Play again?")) {
-                        gameState.currentLevel = 1;
-                        gameState.energy = 80;
-                        energyFill.style.width = '80%';
-                        energyPercent.textContent = '80%';
-                        startLevel();
-                    }
-                }, 500);
-            } else if (!gameState.isSubmitted && gameState.timer > 0) {
-                // Manual retry
-                startLevel();
             } else {
-                startLevel();
+                alert("Game Over! Thanks for playing.");
+                location.reload();
             }
         }
         
@@ -613,15 +397,8 @@
             const toast = document.getElementById('toast');
             toast.textContent = msg;
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2500);
+            setTimeout(() => toast.classList.remove('show'), 2000);
         }
-        
-        window.addEventListener('beforeunload', () => {
-            if (gameState.cameraStream) {
-                gameState.cameraStream.getTracks().forEach(track => track.stop());
-            }
-            if (gameState.timerInterval) clearInterval(gameState.timerInterval);
-        });
     </script>
 </body>
 </html>
