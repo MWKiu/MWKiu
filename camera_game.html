@@ -387,9 +387,11 @@
             } else if (gameState.currentLevel < 3) {
                 gameState.currentLevel++;
                 startLevel();
+            } else if (gameState.currentLevel === 3 && gameState.isSubmitted) {
+                // 當第三關完成後按下按鈕，跳轉到 tran.html
+                window.location.href = "tran.html";
             } else {
-                alert("Game Over! Thanks for playing.");
-                location.reload();
+                startLevel();
             }
         }
         
